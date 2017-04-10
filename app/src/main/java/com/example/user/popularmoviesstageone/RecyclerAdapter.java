@@ -25,6 +25,40 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private ArrayList<Photo> mPhotos;
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
+
+    public static class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private TextView mItemTittle
+                ,mItemPlotSynopsis;
+        private ImageView mItemImage
+                , mUserRating;
+
+        public PhotoViewHolder(View v) {
+
+            super(v);
+
+            mItemTittle = (TextView) v.findViewById(R.id.tv_tittle);
+            mItemPlotSynopsis = (TextView) v.findViewById(R.id.et_plot_synopsis);
+            mItemImage = (ImageView) v.findViewById(R.id.iv_thumbnail);
+            mUserRating = (ImageView) v.findViewById(R.id.iv_user_rating);
+            v.setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View view) {
+            Context context = itemView.getContext();
+            // Intent showPhotoIntent = new Intent(context, )
+
+            Log.i("E","button clicked");
+        }
+    }
+
 
     public RecyclerAdapter(ArrayList<Photo> mPhotos) {
         this.mPhotos = mPhotos;
@@ -46,38 +80,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return 0;
-    }
-
-    @Override
-    public void onClick(View view) {
-        //?
-
-
-    }
-
-    public static class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private TextView mItemTittle
-                        ,mItemPlotSynopsis;
-        private ImageView mItemImage
-                        , mUserRating;
-
-        public PhotoViewHolder(View v) {
-            super(v);
-            mItemTittle = (TextView) v.findViewById(R.id.tv_tittle);
-            mItemPlotSynopsis = (TextView) v.findViewById(R.id.et_plot_synopsis);
-            mItemImage = (ImageView) v.findViewById(R.id.iv_thumbnail);
-            mUserRating = (ImageView) v.findViewById(R.id.iv_user_rating);
-            v.setOnClickListener(this);
-        }
-
-
-        @Override
-        public void onClick(View view) {
-            Context context = view.getContext();
-
-            Log.i("E","button clicked");
-        }
     }
 
 
