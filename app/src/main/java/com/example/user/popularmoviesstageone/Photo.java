@@ -5,4 +5,5 @@ package com.example.user.popularmoviesstageone;
  */
 
 public class Photo {
+
 }

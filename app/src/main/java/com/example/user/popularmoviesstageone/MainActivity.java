@@ -9,6 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.user.popularmoviesstageone.Utilities.NetworkUtils;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
@@ -20,14 +24,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
         // link
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
-        mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
+      //  mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
 
     }
 
