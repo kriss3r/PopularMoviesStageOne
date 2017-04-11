@@ -1,5 +1,6 @@
 package com.example.user.popularmoviesstageone;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,7 +12,12 @@ import android.view.MenuItem;
 
 import com.example.user.popularmoviesstageone.Utilities.NetworkUtils;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +35,19 @@ public class MainActivity extends AppCompatActivity {
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
       //  mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
+
+        // FetchClass test.
+        String location = "sort_by_top_rated";
+        String result = null;
+        try {
+            result = new FetchMoviesData().execute(location).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        Log.i("Result", result);
 
     }
 
@@ -50,4 +69,34 @@ public class MainActivity extends AppCompatActivity {
        // Log.i("ERROR", item.
         return super.onOptionsItemSelected(item);
     }
+
+/*Class used to download data outside of main thread*/
+    public class FetchMoviesData extends AsyncTask<String, String, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL movieRequest = null;
+            String responseFromHttpRequest = "";
+            if (strings[0].isEmpty()){
+                return null;
+            }
+
+            try {
+                 movieRequest = NetworkUtils.buildUrl(strings[0]);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                responseFromHttpRequest = NetworkUtils.getResponseFromHTTPUrl(movieRequest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return responseFromHttpRequest;
+        }
+    }
+
+
+
 }

@@ -1,9 +1,12 @@
 package com.example.user.popularmoviesstageone.Utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,10 +24,10 @@ Class used to connect/gather all necessary data from Network.
 public class NetworkUtils {
 
 
-    public static final String BASE_URL = "http://image.tmdb.org/3/";
+    public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String DEFAULT_PHONE_SIZE = "w185";
-    protected static final String API_KEY = "d1f9bfcfade6bf4b6d859f76f24be3dc";
-
+    protected static final String API_KEY = "d1f9bfcfade6bf4b6d859f76f24be3dc&";
+// https://api.themoviedb.org/3/movie/popular?api_key=d1f9bfcfade6bf4b6d859f76f24be3dc&
  /*   It’s constructed using 3 parts:
     The base URL will look like: http://image.tmdb.org/t/p/.
     Then you will need a ‘size’, which will be one of the following: "w92", "w154", "w185", "w342", "w500", "w780", or "original". For most phones we recommend using “w185”.
@@ -32,8 +35,8 @@ public class NetworkUtils {
 
  /*Used to build valid URL according to way which used chosed ( most popular or top rated)*/
 public static URL buildUrl(String userSelection) throws MalformedURLException{
-    String topRated = BASE_URL + "movie?api_key=" + API_KEY + "&sort_by=toprated";
-    String mostPopular = BASE_URL + "movie?api_key=" + API_KEY + "&sort_by=popularity";
+    String topRated = BASE_URL + "movie/popular?api_key=" + API_KEY;
+    String mostPopular = BASE_URL + "movie/top_rated?api_key=" + API_KEY;
     String selection;
     URL mainURL = null;
 
@@ -52,16 +55,21 @@ public static URL buildUrl(String userSelection) throws MalformedURLException{
     }
 
 /*Method used to receive all http respone content as a String value.*/
+
+// TODO need to fix bufferedReader to make sure that it downloads whole content.
 public static String getResponseFromHTTPUrl(URL url) throws IOException {
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-    Scanner sc = new Scanner(in);
-    String requestResult = "";
-    StringBuilder builder = new StringBuilder(requestResult);
-    InputStream inputStream = urlConnection.getInputStream();
+    InputStream is = urlConnection.getInputStream();
+    InputStreamReader inputReader = new InputStreamReader(is);
+    BufferedReader bufferedReader = new BufferedReader(inputReader);
 
-    while(sc.hasNext()==true){
-        requestResult = builder.append(sc.next()).toString();
+
+    String requestResult = "";
+    String line;
+    StringBuilder builder = new StringBuilder(requestResult);
+    while((line = bufferedReader.readLine())!= null){
+        builder.append(line + "\n").toString();
     }
     return requestResult;
     }
