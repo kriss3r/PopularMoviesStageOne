@@ -6,17 +6,22 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.user.popularmoviesstageone.Utilities.NetworkUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
+    private LinkedList<JSONObject> listOfJsons;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,20 +41,20 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
-      //  mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
+        listOfJsons = new LinkedList<JSONObject>();
 
+        //  mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
         // FetchClass test.
         String location = "sort_by_top_rated";
         String result = null;
         try {
-            result = new FetchMoviesData().execute(location).get();
+            listOfJsons = new FetchMoviesData().execute(location).get();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
-        Log.i("Result", result);
 
     }
 
@@ -62,41 +69,46 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId()==R.id.it_most_popular){
-            Log.i("i","most popular");
         }else {
-            Log.i("i","top rated");
         }
-       // Log.i("ERROR", item.
         return super.onOptionsItemSelected(item);
     }
 
 /*Class used to download data outside of main thread*/
-    public class FetchMoviesData extends AsyncTask<String, String, String>{
+    public class FetchMoviesData extends AsyncTask<String, String,LinkedList<JSONObject>> {
 
-        @Override
-        protected String doInBackground(String... strings) {
-            URL movieRequest = null;
-            String responseFromHttpRequest = "";
-            if (strings[0].isEmpty()){
-                return null;
+    @Override
+    protected LinkedList<JSONObject> doInBackground(String... strings) {
+        LinkedList<JSONObject> listOfJsons = new LinkedList<JSONObject>();
+        URL movieRequest = null;
+
+        String responseFromHttpRequest = null;
+        if (strings[0].isEmpty()) {
+            return null;
+        }
+
+        try {
+            movieRequest = NetworkUtils.buildUrl(strings[0]);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            responseFromHttpRequest = NetworkUtils.getResponseFromHTTPUrl(movieRequest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            JSONObject jObject = new JSONObject(responseFromHttpRequest);
+            JSONArray jsonArray = jObject.getJSONArray("results");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                listOfJsons.add(new JSONObject(String.valueOf(jsonArray.getJSONObject(i))));
             }
-
-            try {
-                 movieRequest = NetworkUtils.buildUrl(strings[0]);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                responseFromHttpRequest = NetworkUtils.getResponseFromHTTPUrl(movieRequest);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return responseFromHttpRequest;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return listOfJsons;
         }
     }
-
-
-
 }

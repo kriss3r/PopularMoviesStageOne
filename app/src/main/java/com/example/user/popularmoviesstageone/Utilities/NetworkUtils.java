@@ -56,21 +56,21 @@ public static URL buildUrl(String userSelection) throws MalformedURLException{
 
 /*Method used to receive all http respone content as a String value.*/
 
-// TODO need to fix bufferedReader to make sure that it downloads whole content.
+// TODO 1:  need to fix bufferedReader to make sure that it downloads whole content.
+    // TODO 1: COMPLETED
 public static String getResponseFromHTTPUrl(URL url) throws IOException {
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
     InputStream is = urlConnection.getInputStream();
     InputStreamReader inputReader = new InputStreamReader(is);
-    BufferedReader bufferedReader = new BufferedReader(inputReader);
-
-
+    Scanner sc = new Scanner(is);
     String requestResult = "";
     String line;
     StringBuilder builder = new StringBuilder(requestResult);
-    while((line = bufferedReader.readLine())!= null){
-        builder.append(line + "\n").toString();
+    while(sc.hasNext()==true){
+        builder.append(sc.next());
     }
+   requestResult = builder.toString();
     return requestResult;
     }
 
