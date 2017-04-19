@@ -26,7 +26,8 @@ public class NetworkUtils {
 
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String DEFAULT_PHONE_SIZE = "w185";
-    protected static final String API_KEY = "d1f9bfcfade6bf4b6d859f76f24be3dc&";
+    // PASTE API KEY BELOW
+    protected static final String API_KEY = "";
 
  /*Used to build valid URL according to way which used chosed ( most popular or top rated)*/
 public static URL buildUrl(Boolean userSelection) throws MalformedURLException{
