@@ -31,7 +31,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onClick(View view) {
-    Log.i("L","L");
+
     }
 
 
@@ -59,7 +59,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public RecyclerAdapter(Movie mMoviesList) {
-        this.mMoviesList = mMoviesList;
+        this.mMoviesList= mMoviesList;
     }
     public static final String URL_BASE = "http://image.tmdb.org/t/p/";
     public static final String SIZE = "w154";
@@ -67,17 +67,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.detailed_view,parent,false);
+                .inflate(R.layout.movies_list,parent,false);
+
+        // set correct height programmatically
+        int height = parent.getMeasuredHeight()/4;
+        inflatedView.setMinimumHeight(height);
         return new ViewHolder(inflatedView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-      //  holder.mItemTittle.setText(mMoviesList.getResults().get(position).getOriginal_title());
         String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path();
-    //   holder.mItemImage.setScaleType(ImageView.ScaleType.MATRIX);
         Picasso.with(holder.itemView.getContext()).load(httpRequestAddress).into(holder.mItemImage);
-
     }
 
     @Override

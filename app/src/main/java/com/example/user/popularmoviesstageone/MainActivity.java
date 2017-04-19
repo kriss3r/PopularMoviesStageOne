@@ -37,26 +37,30 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
     private Movie moviesList;
-
+    private boolean sortOrder = false; // false for top_rated, true for most_popular
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("first",String.valueOf(moviesList.getResults().size())+" b");
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
-        mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
-
         // FetchClass test.
-        String location = "sort_by_top_rated";
+        String InitialLocation = "sort_by_top_rated";
         try {
-            moviesList = new FetchMoviesData().execute(location).get();
+            moviesList = new FetchMoviesData().execute(InitialLocation).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        setRecyclerView();
+    }
+
+    public void setRecyclerView(){
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
+        mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
+        mGridLayoutManager.setAutoMeasureEnabled(true);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerViewAdapter = new RecyclerAdapter(moviesList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
     }
