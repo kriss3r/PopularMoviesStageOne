@@ -57,6 +57,7 @@ public static String getResponseFromHTTPUrl(URL url) throws IOException {
     InputStream is = urlConnection.getInputStream();
     InputStreamReader inputReader = new InputStreamReader(is);
     Scanner sc = new Scanner(is);
+    sc.useDelimiter(System.getProperty("line.separator"));
     String requestResult = "";
     String line;
     StringBuilder builder = new StringBuilder(requestResult);

@@ -25,7 +25,6 @@ public class DetailedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailed_view);
-        Log.d("Log from second act","LOG");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent it = getIntent();
         Bundle bundle = it.getExtras();
@@ -36,9 +35,11 @@ public class DetailedActivity extends AppCompatActivity {
         TextView mItemPlotSynopsis = (TextView) findViewById(R.id.tv_plot_synopsis);
         ImageView mDetailedItem = (ImageView) findViewById(R.id.iv_thumbnail);
         TextView mUserRating = (TextView) findViewById(R.id.tv_user_rating);
+        TextView mReleaseDate = (TextView) findViewById(R.id.tv_relase_date);
 
         mItemTittle.setText(mMoviesList.getResults().get(mItemNumber).getOriginal_title());
         mUserRating.setText("User Rating = "+String.valueOf(mMoviesList.getResults().get(mItemNumber).getVote_average()));
+        mReleaseDate.setText("Release date = "+mMoviesList.getResults().get(mItemNumber).getRelease_date());
         mItemPlotSynopsis.setText(mMoviesList.getResults().get(mItemNumber).getOverview());
         String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(mItemNumber).getPoster_path();
         Picasso.with(this).load(httpRequestAddress).into(mDetailedItem);

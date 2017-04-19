@@ -17,7 +17,7 @@
     <ImageView
         android:id="@+id/iv_thumbnail"
         android:layout_width="400dp"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:adjustViewBounds="true"
         android:padding="10sp"
         app:srcCompat="@android:color/background_light" />

@@ -1,5 +1,6 @@
 package com.example.user.popularmoviesstageone;
 
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,9 +11,11 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 
 import com.example.user.popularmoviesstageone.Utilities.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -36,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerAdapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
-    private Movie moviesList;
+    private Movie mMoviesList;
+    private OrientationEventListener mOrientationListener;
     private boolean sortOrder = false; // false for top_rated, true for most_popular
 
     @Override
@@ -44,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // FetchClass test.
-        fetchMoviesData(sortOrder);
+  fetchMoviesData(sortOrder);
         setRecyclerView();
     }
 
     // triggered to obtain data from AsyncTask.
     public void fetchMoviesData(boolean Order){
         try {
-            moviesList = new FetchMoviesData().execute(Order).get();
+            mMoviesList = new FetchMoviesData().execute(Order).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         mGridLayoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerViewAdapter = new RecyclerAdapter(moviesList);
+        mRecyclerViewAdapter = new RecyclerAdapter(mMoviesList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
     }
 
@@ -117,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
 
             // create Movie object which contains List of Movies from String HTTP response.
             Type collectionType = new TypeToken<Movie>(){}.getType();
-            movieList = new Gson().fromJson(responseFromHttpRequest, collectionType);
+            Gson gson = new Gson();
+            movieList = gson.fromJson(responseFromHttpRequest, collectionType);
         return movieList;
         }
     }

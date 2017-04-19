@@ -45,6 +45,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 // used to move to correct Activity thorough implicit intent.
         @Override
         public void onClick(View view) {
+            Log.i("overwiew",mMoviesList.getResults().get(getAdapterPosition()).getOverview());
             mCurrentId = getAdapterPosition();
             Context context = itemView.getContext();
             Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
