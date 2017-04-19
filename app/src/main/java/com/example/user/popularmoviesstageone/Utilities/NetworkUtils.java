@@ -29,15 +29,15 @@ public class NetworkUtils {
     protected static final String API_KEY = "d1f9bfcfade6bf4b6d859f76f24be3dc&";
 
  /*Used to build valid URL according to way which used chosed ( most popular or top rated)*/
-public static URL buildUrl(String userSelection) throws MalformedURLException{
+public static URL buildUrl(Boolean userSelection) throws MalformedURLException{
     String topRated = BASE_URL + "movie/popular?api_key=" + API_KEY;
     String mostPopular = BASE_URL + "movie/top_rated?api_key=" + API_KEY;
-    String selection;
+    String selection = "";
     URL mainURL = null;
 
-    if(userSelection == "sort_by_top_rated"){
+    if(userSelection == false){
         selection = topRated;
-    }else {
+    }else if(userSelection == true) {
         selection = mostPopular;
     }
     try {

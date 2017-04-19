@@ -50,11 +50,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             v.setOnClickListener(this);
         }
 
-
+// used to move to correct Activity thorough implicit intent.
         @Override
         public void onClick(View view) {
             Context context = itemView.getContext();
-         //   Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
+            Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
+            context.startActivity(showPhotoIntent);
         }
     }
 

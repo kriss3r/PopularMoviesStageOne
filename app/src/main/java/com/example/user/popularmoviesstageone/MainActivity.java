@@ -44,15 +44,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // FetchClass test.
-        String InitialLocation = "sort_by_top_rated";
+        fetchMoviesData(sortOrder);
+        setRecyclerView();
+    }
+
+    public void fetchMoviesData(boolean Order){
         try {
-            moviesList = new FetchMoviesData().execute(InitialLocation).get();
+            moviesList = new FetchMoviesData().execute(Order).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        setRecyclerView();
     }
 
     public void setRecyclerView(){
@@ -75,27 +78,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId()==R.id.it_most_popular){
-        }else {
+        if (item.getItemId()==R.id.it_most_popular &&sortOrder!=true){
+            sortOrder = true;
+            fetchMoviesData(sortOrder);
+            setRecyclerView();
+
+        }else if((item.getItemId()==R.id.it_most_rated &&sortOrder!=false)) {
+            sortOrder = false;
+            fetchMoviesData(sortOrder);
+            setRecyclerView();
         }
         return super.onOptionsItemSelected(item);
     }
 
 /*Class used to download data outside of main thread*/
-    public class FetchMoviesData extends AsyncTask<String, String,Movie> {
+    public class FetchMoviesData extends AsyncTask<Boolean, String,Movie> {
 
     @Override
-    protected Movie doInBackground(String... strings) {
+    protected Movie doInBackground(Boolean... userSelection) {
         Movie movieList;
         URL movieRequest = null;
 
         String responseFromHttpRequest = null;
-        if (strings[0].isEmpty()) {
-            return null;
-        }
 
         try {
-            movieRequest = NetworkUtils.buildUrl(strings[0]);
+            movieRequest = NetworkUtils.buildUrl(userSelection[0]);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
