@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.user.popularmoviesstageone.Utilities.*;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,8 +21,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
     private List<JSONObject> listOfJsons;
-    private List<Movie> moviesList;
+    private Movie moviesList;
 
 
     @Override
@@ -44,16 +48,16 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
-        listOfJsons = new LinkedList<JSONObject>();
-        moviesList = Collections.EMPTY_LIST;
+        moviesList = null;
 
         //  mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
         // FetchClass test.
         String location = "sort_by_top_rated";
         String result = null;
         try {
-            listOfJsons = new FetchMoviesData().execute(location).get();
-          //  moviesList = new ConvertToObjects().execute(listOfJsons).get();
+            moviesList = new FetchMoviesData().execute(location).get();
+            List<Movie.ResultsBean> mv = moviesList.getResults();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -79,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 /*Class used to download data outside of main thread*/
-    public class FetchMoviesData extends AsyncTask<String, String,List<JSONObject>> {
+    public class FetchMoviesData extends AsyncTask<String, String,Movie> {
 
     @Override
-    protected List<JSONObject> doInBackground(String... strings) {
-        List<JSONObject> listOfJsons = new LinkedList<JSONObject>();
+    protected Movie doInBackground(String... strings) {
+        Movie movieList;
         URL movieRequest = null;
 
         String responseFromHttpRequest = null;
@@ -103,16 +107,10 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        try {
-            JSONObject jObject = new JSONObject(responseFromHttpRequest);
-            JSONArray jsonArray = jObject.getJSONArray("results");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                listOfJsons.add(new JSONObject(String.valueOf(jsonArray.getJSONObject(i))));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return listOfJsons;
+            // create Movie object which contains List of Movies from String HTTP response.
+            Type collectionType = new TypeToken<Movie>(){}.getType();
+            movieList = new Gson().fromJson(responseFromHttpRequest, collectionType);
+        return movieList;
         }
     }
 }
