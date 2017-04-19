@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setRecyclerView();
     }
 
+    // triggered to obtain data from AsyncTask.
     public void fetchMoviesData(boolean Order){
         try {
             moviesList = new FetchMoviesData().execute(Order).get();
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // used to set RecyclerView
     public void setRecyclerView(){
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
@@ -91,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-/*Class used to download data outside of main thread*/
+/*Class used to download data outside of main thread & convert it to objects using Gson*/
     public class FetchMoviesData extends AsyncTask<Boolean, String,Movie> {
 
     @Override

@@ -16,13 +16,13 @@
 
     <ImageView
         android:id="@+id/iv_thumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:padding="10sp"
         app:srcCompat="@android:color/background_light" />
 
-    <EditText
-        android:id="@+id/et_plot_synopsis"
+    <TextView
+        android:id="@+id/tv_plot_synopsis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -30,8 +30,8 @@
         android:padding="10sp"
         android:textSize="16sp" />
 
-    <ImageView
-        android:id="@+id/iv_user_rating"
+    <TextView
+        android:id="@+id/tv_user_rating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10sp"
