@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.user.popularmoviesstageone.Utilities.NetworkUtils;
+import com.example.user.popularmoviesstageone.Utilities.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
-    private LinkedList<JSONObject> listOfJsons;
+    private List<JSONObject> listOfJsons;
+    private List<Movie> moviesList;
 
 
     @Override
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         listOfJsons = new LinkedList<JSONObject>();
+        moviesList = Collections.EMPTY_LIST;
 
         //  mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
         // FetchClass test.
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         String result = null;
         try {
             listOfJsons = new FetchMoviesData().execute(location).get();
-
+          //  moviesList = new ConvertToObjects().execute(listOfJsons).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -75,11 +79,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 /*Class used to download data outside of main thread*/
-    public class FetchMoviesData extends AsyncTask<String, String,LinkedList<JSONObject>> {
+    public class FetchMoviesData extends AsyncTask<String, String,List<JSONObject>> {
 
     @Override
-    protected LinkedList<JSONObject> doInBackground(String... strings) {
-        LinkedList<JSONObject> listOfJsons = new LinkedList<JSONObject>();
+    protected List<JSONObject> doInBackground(String... strings) {
+        List<JSONObject> listOfJsons = new LinkedList<JSONObject>();
         URL movieRequest = null;
 
         String responseFromHttpRequest = null;
