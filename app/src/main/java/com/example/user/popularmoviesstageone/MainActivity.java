@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mRecyclerViewAdapter;
+    private RecyclerAdapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
     private List<JSONObject> listOfJsons;
@@ -44,13 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // link
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
-        mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
-        moviesList = null;
 
-        //  mRecyclerViewAdapter = new RecyclerAdapter.PhotoViewHolder(this);
         // FetchClass test.
         String location = "sort_by_top_rated";
         String result = null;
@@ -63,7 +57,15 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
+        mGridLayoutManager = new GridLayoutManager(this.getApplicationContext(),SPAN_COUNT,LinearLayoutManager.VERTICAL,false);
+        Log.i("span size",mGridLayoutManager.getSpanSizeLookup().toString());
+        Log.i("next",String.valueOf(mGridLayoutManager.getSpanCount()));
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        moviesList = null;
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerViewAdapter = new RecyclerAdapter(moviesList);
+        mRecyclerView.setAdapter(mRecyclerViewAdapter);
     }
 
  // used to link main_menu.xml as options menu

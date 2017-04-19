@@ -27,11 +27,6 @@ public class NetworkUtils {
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String DEFAULT_PHONE_SIZE = "w185";
     protected static final String API_KEY = "d1f9bfcfade6bf4b6d859f76f24be3dc&";
-// https://api.themoviedb.org/3/movie/popular?api_key=d1f9bfcfade6bf4b6d859f76f24be3dc&
- /*   It’s constructed using 3 parts:
-    The base URL will look like: http://image.tmdb.org/t/p/.
-    Then you will need a ‘size’, which will be one of the following: "w92", "w154", "w185", "w342", "w500", "w780", or "original". For most phones we recommend using “w185”.
-    And finally the poster path returned by the query, in this case “/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg”*/
 
  /*Used to build valid URL according to way which used chosed ( most popular or top rated)*/
 public static URL buildUrl(String userSelection) throws MalformedURLException{
