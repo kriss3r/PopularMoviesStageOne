@@ -31,7 +31,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onClick(View view) {
-
+    Log.i("L","L");
     }
 
 
@@ -54,7 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         @Override
         public void onClick(View view) {
             Context context = itemView.getContext();
-            Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
+         //   Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
         }
     }
 
@@ -67,24 +67,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.movies_list,parent,false);
+                .inflate(R.layout.detailed_view,parent,false);
         return new ViewHolder(inflatedView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
       //  holder.mItemTittle.setText(mMoviesList.getResults().get(position).getOriginal_title());
-        String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path().toString();
-       holder.mItemImage.setScaleType(ImageView.ScaleType.MATRIX);
+        String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path();
+    //   holder.mItemImage.setScaleType(ImageView.ScaleType.MATRIX);
         Picasso.with(holder.itemView.getContext()).load(httpRequestAddress).into(holder.mItemImage);
 
     }
 
     @Override
     public int getItemCount() {
-        return mMoviesList.getResults().size();
+        return this.mMoviesList.getResults().size();
     }
-
 
 
 }

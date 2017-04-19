@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerAdapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
-    private List<JSONObject> listOfJsons;
     private Movie moviesList;
 
 
@@ -44,26 +43,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("first",String.valueOf(moviesList.getResults().size())+" b");
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
+        mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
 
         // FetchClass test.
         String location = "sort_by_top_rated";
-        String result = null;
         try {
             moviesList = new FetchMoviesData().execute(location).get();
-            List<Movie.ResultsBean> mv = moviesList.getResults();
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
-        mGridLayoutManager = new GridLayoutManager(this.getApplicationContext(),SPAN_COUNT,LinearLayoutManager.VERTICAL,false);
-        Log.i("span size",mGridLayoutManager.getSpanSizeLookup().toString());
-        Log.i("next",String.valueOf(mGridLayoutManager.getSpanCount()));
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
-        moviesList = null;
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerViewAdapter = new RecyclerAdapter(moviesList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
     }

@@ -51,8 +51,6 @@ public static URL buildUrl(String userSelection) throws MalformedURLException{
 
 /*Method used to receive all http respone content as a String value.*/
 
-// TODO 1:  need to fix bufferedReader to make sure that it downloads whole content.
-    // TODO 1: COMPLETED
 public static String getResponseFromHTTPUrl(URL url) throws IOException {
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
