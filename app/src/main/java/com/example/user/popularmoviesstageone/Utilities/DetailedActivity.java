@@ -38,6 +38,7 @@ public class DetailedActivity extends AppCompatActivity {
         TextView mUserRating = (TextView) findViewById(R.id.tv_user_rating);
 
         mItemTittle.setText(mMoviesList.getResults().get(mItemNumber).getOriginal_title());
+        mUserRating.setText("User Rating = "+String.valueOf(mMoviesList.getResults().get(mItemNumber).getVote_average()));
         mItemPlotSynopsis.setText(mMoviesList.getResults().get(mItemNumber).getOverview());
         String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(mItemNumber).getPoster_path();
         Picasso.with(this).load(httpRequestAddress).into(mDetailedItem);
