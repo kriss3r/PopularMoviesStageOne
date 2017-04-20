@@ -3,10 +3,7 @@ package com.example.user.popularmoviesstageone;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.user.popularmoviesstageone.Utilities.DetailedActivity;
+import com.example.user.popularmoviesstageone.utilities.DetailedActivity;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by User on 05.04.2017.
