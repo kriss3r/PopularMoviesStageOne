@@ -19,22 +19,27 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
+
     private RecyclerAdapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
     private Movie mMoviesList;
     private OrientationEventListener mOrientationListener;
     private boolean sortOrder = false; // false for top_rated, true for most_popular
+    @BindView(R.id.rv_images)
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // FetchClass test.
-  fetchMoviesData(sortOrder);
+        fetchMoviesData(sortOrder);
         setRecyclerView();
     }
 
@@ -51,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     // used to set RecyclerView
     public void setRecyclerView(){
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
+        ButterKnife.bind(this);
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
         mGridLayoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(mGridLayoutManager);

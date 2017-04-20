@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="tittle_size">26sp</dimen>
+    <dimen name="tittle_size_land">24sp</dimen>
     <dimen name="text_size">16sp</dimen>
-
+    <dimen name="def_padding">10sp</dimen>
+    <dimen name="image_view_height_phone_size">350dp</dimen>
+    <dimen name="image_view_height_phone_land">300dp</dimen>
 
 </resources>

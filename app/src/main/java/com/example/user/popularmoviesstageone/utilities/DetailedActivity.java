@@ -1,5 +1,6 @@
 package com.example.user.popularmoviesstageone.utilities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +12,26 @@ import com.example.user.popularmoviesstageone.Movie;
 import com.example.user.popularmoviesstageone.R;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailedActivity extends AppCompatActivity {
     public static final String URL_BASE = "http://image.tmdb.org/t/p/";
     public static final String SIZE = "w154";
     private Movie mMoviesList;
     private int mItemNumber;
+
+    @BindView(R.id.tv_tittle)
+    TextView mItemTittle;
+    @BindView(R.id.tv_plot_synopsis)
+    TextView mItemPlotSynopsis;
+    @BindView(R.id.tv_user_rating)
+    TextView mUserRating;
+    @BindView(R.id.tv_relase_date)
+    TextView mReleaseDate;
+    @BindView(R.id.iv_thumbnail)
+    ImageView mDetailedItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,12 +41,7 @@ public class DetailedActivity extends AppCompatActivity {
         Bundle bundle = it.getExtras();
         mMoviesList = (Movie) bundle.getSerializable("value");
         mItemNumber = it.getIntExtra("id",0);
-
-        TextView mItemTittle = (TextView) findViewById(R.id.tv_tittle);
-        TextView mItemPlotSynopsis = (TextView) findViewById(R.id.tv_plot_synopsis);
-        ImageView mDetailedItem = (ImageView) findViewById(R.id.iv_thumbnail);
-        TextView mUserRating = (TextView) findViewById(R.id.tv_user_rating);
-        TextView mReleaseDate = (TextView) findViewById(R.id.tv_relase_date);
+        ButterKnife.bind(this);
 
         mItemTittle.setText(mMoviesList.getResults().get(mItemNumber).getOriginal_title());
         mUserRating.setText("User Rating = "+String.valueOf(mMoviesList.getResults().get(mItemNumber).getVote_average()));

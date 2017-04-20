@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.example.user.popularmoviesstageone.utilities.DetailedActivity;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by User on 05.04.2017.
  */
@@ -24,12 +27,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private int mCurrentId;
-        public TextView mItemTittle,mItemPlotSynopsis;
-        public ImageView mItemImage, mUserRating, mDetailedItem;
+        @BindView(R.id.movie_item)
+        ImageView mItemImage;
 
         public ViewHolder(View v) {
             super(v);
-            mItemImage = (ImageView) v.findViewById(R.id.movie_item);
+            ButterKnife.bind(this, v);
             itemView.setOnClickListener(this);
         }
 
