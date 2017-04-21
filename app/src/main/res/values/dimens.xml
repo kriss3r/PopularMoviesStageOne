@@ -5,7 +5,7 @@
     <dimen name="text_size">16sp</dimen>
     <dimen name="def_padding">10sp</dimen>
     <dimen name="image_view_height_phone_size">350dp</dimen>
-    <dimen name="image_view_height_phone_land">350dp</dimen>
+    <dimen name="image_view_height_phone_land">320dp</dimen>
 
 
 </resources>

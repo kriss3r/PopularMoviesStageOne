@@ -50,7 +50,6 @@
                     android:id="@+id/tv_plot_synopsis"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:padding="@dimen/def_padding"
                     android:textSize="@dimen/text_size" />
 
