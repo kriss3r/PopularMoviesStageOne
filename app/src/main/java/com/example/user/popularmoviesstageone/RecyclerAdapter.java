@@ -2,6 +2,9 @@ package com.example.user.popularmoviesstageone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -76,12 +79,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         mCurrentId = position;
-        String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path();
-        Picasso.with(holder.itemView.getContext()).load(httpRequestAddress).into(holder.mItemImage);
-}
 
+        String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path();
+        Picasso
+                .with(holder.itemView.getContext())
+                .load(httpRequestAddress)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(holder.mItemImage);
+}
     @Override
     public int getItemCount() {
+
         if (mMoviesList == null || mMoviesList.getResults().isEmpty() == true) {
             return 0;
         } else {

@@ -1,6 +1,9 @@
 package com.example.user.popularmoviesstageone;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
+import android.widget.Toast;
 
 import com.example.user.popularmoviesstageone.utilities.*;
 import com.google.gson.Gson;
@@ -41,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // FetchClass test.
         setRecyclerView();
-        fetchMoviesData(sortOrder);
+        performConnectionAttempt(sortOrder);
+
     }
 
     // triggered to obtain data from AsyncTask.
@@ -58,6 +62,29 @@ public class MainActivity extends AppCompatActivity {
 // Create the async task and pass it the post task listener.
         new FetchMoviesData(postTaskListener).execute(Order);
 
+    }
+
+    public void performConnectionAttempt(boolean sortOrder) {
+        if (isConnectedToInternet()) {
+            fetchMoviesData(sortOrder);
+        } else {
+            Toast.makeText(this, "No internet connection, to try again go to settings and choose sort type", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // method used to check if there is a network connection, additional permissions required in manifest file(Access.Network.State).
+    public boolean isConnectedToInternet() {
+        ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+
+        }
+        return false;
     }
 
     // used to set RecyclerView
@@ -83,12 +110,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId()==R.id.it_most_popular &&sortOrder!=true){
             sortOrder = true;
-            fetchMoviesData(sortOrder);
+            performConnectionAttempt(sortOrder);
             setRecyclerView();
 
         }else if((item.getItemId()==R.id.it_most_rated &&sortOrder!=false)) {
             sortOrder = false;
-            fetchMoviesData(sortOrder);
+            performConnectionAttempt(sortOrder);
             setRecyclerView();
         }
         return super.onOptionsItemSelected(item);
