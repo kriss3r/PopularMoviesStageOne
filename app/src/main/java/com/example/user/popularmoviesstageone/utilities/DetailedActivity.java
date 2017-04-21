@@ -42,8 +42,8 @@ public class DetailedActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mItemTittle.setText(viewData.getOriginal_title());
-        mUserRating.setText("User Rating = " + String.valueOf(viewData.getRelease_date()));
-        mReleaseDate.setText("Release date = " + String.valueOf(viewData.getRelease_date()));
+        mUserRating.setText("User Rating \n" + String.valueOf(viewData.getVote_average()));
+        mReleaseDate.setText("Release date \n" + String.valueOf(viewData.getRelease_date()));
         mItemPlotSynopsis.setText(viewData.getOverview());
         String httpRequestAddress = URL_BASE + SIZE + viewData.getPoster_path();
         Picasso.with(this).load(httpRequestAddress).into(mDetailedItem);
