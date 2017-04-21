@@ -1,10 +1,12 @@
 package com.example.user.popularmoviesstageone;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -28,30 +30,34 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerAdapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
-    private Movie mMoviesList;
+    public Movie mMoviesList;
     private OrientationEventListener mOrientationListener;
     private boolean sortOrder = false; // false for top_rated, true for most_popular
     @BindView(R.id.rv_images)
     RecyclerView mRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // FetchClass test.
-        fetchMoviesData(sortOrder);
         setRecyclerView();
+        fetchMoviesData(sortOrder);
     }
 
     // triggered to obtain data from AsyncTask.
     public void fetchMoviesData(boolean Order){
-        try {
-            mMoviesList = new FetchMoviesData().execute(Order).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        PostTaskListener<Movie> postTaskListener = new PostTaskListener<Movie>() {
+            @Override
+            public void onPostTask(Movie m) {
+                mMoviesList = m;
+                mRecyclerViewAdapter.swapDataSet(mMoviesList);
+            }
+        };
+// Create the async task and pass it the post task listener.
+        new FetchMoviesData(postTaskListener).execute(Order);
+
     }
 
     // used to set RecyclerView
@@ -88,33 +94,5 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-/*Class used to download data outside of main thread & convert it to objects using Gson*/
-    public class FetchMoviesData extends AsyncTask<Boolean, String,Movie> {
 
-    @Override
-    protected Movie doInBackground(Boolean... userSelection) {
-        Movie movieList;
-        URL movieRequest = null;
-
-        String responseFromHttpRequest = null;
-
-        try {
-            movieRequest = NetworkUtils.buildUrl(userSelection[0]);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            responseFromHttpRequest = NetworkUtils.getResponseFromHTTPUrl(movieRequest);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-            // create Movie object which contains List of Movies from String HTTP response.
-            Type collectionType = new TypeToken<Movie>(){}.getType();
-            Gson gson = new Gson();
-            movieList = gson.fromJson(responseFromHttpRequest, collectionType);
-        return movieList;
-        }
-    }
 }

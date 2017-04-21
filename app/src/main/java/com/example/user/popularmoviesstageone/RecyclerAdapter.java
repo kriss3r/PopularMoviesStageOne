@@ -30,6 +30,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         @BindView(R.id.movie_item)
         ImageView mItemImage;
 
+
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
@@ -39,7 +40,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 // used to move to correct Activity thorough implicit intent.
         @Override
         public void onClick(View view) {
-            Log.i("overwiew",mMoviesList.getResults().get(getAdapterPosition()).getOverview());
             mCurrentId = getAdapterPosition();
             Context context = itemView.getContext();
             Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
@@ -57,11 +57,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public static final String URL_BASE = "http://image.tmdb.org/t/p/";
     public static final String SIZE = "w154";
 
+    public void swapDataSet(Movie newData) {
+        mMoviesList = newData;
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.movies_list,parent,false);
-
         // set correct height programmatically
         int height = parent.getMeasuredHeight()/4;
         inflatedView.setMinimumHeight(height);
@@ -70,7 +75,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         mCurrentId = position;
         String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path();
         Picasso.with(holder.itemView.getContext()).load(httpRequestAddress).into(holder.mItemImage);
@@ -78,8 +82,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return mMoviesList.getResults().size();
+        if (mMoviesList == null || mMoviesList.getResults().isEmpty() == true) {
+            return 0;
+        } else {
+            return mMoviesList.getResults().size();
+        }
     }
-
-
 }

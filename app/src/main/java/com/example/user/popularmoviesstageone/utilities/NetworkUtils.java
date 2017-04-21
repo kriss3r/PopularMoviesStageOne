@@ -52,8 +52,8 @@ public static String getResponseFromHTTPUrl(URL url) throws IOException {
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
     // set timeouts to make sure that it won't last forever.
-    urlConnection.setConnectTimeout(3000);
-    urlConnection.setReadTimeout(7000);
+    urlConnection.setConnectTimeout(2000);
+    urlConnection.setReadTimeout(4000);
 
     InputStream is = urlConnection.getInputStream();
     InputStreamReader inputReader = new InputStreamReader(is);
