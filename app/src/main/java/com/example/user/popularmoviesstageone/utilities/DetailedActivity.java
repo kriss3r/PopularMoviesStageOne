@@ -38,16 +38,14 @@ public class DetailedActivity extends AppCompatActivity {
         setContentView(R.layout.detailed_view);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent it = getIntent();
-        Bundle bundle = it.getExtras();
-        mMoviesList = (Movie) bundle.getSerializable("value");
-        mItemNumber = it.getIntExtra("id",0);
+        Movie.ResultsBean viewData = it.getExtras().getParcelable("value");
         ButterKnife.bind(this);
 
-        mItemTittle.setText(mMoviesList.getResults().get(mItemNumber).getOriginal_title());
-        mUserRating.setText("User Rating = "+String.valueOf(mMoviesList.getResults().get(mItemNumber).getVote_average()));
-        mReleaseDate.setText("Release date = "+mMoviesList.getResults().get(mItemNumber).getRelease_date());
-        mItemPlotSynopsis.setText(mMoviesList.getResults().get(mItemNumber).getOverview());
-        String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(mItemNumber).getPoster_path();
+        mItemTittle.setText(viewData.getOriginal_title());
+        mUserRating.setText("User Rating = " + String.valueOf(viewData.getRelease_date()));
+        mReleaseDate.setText("Release date = " + String.valueOf(viewData.getRelease_date()));
+        mItemPlotSynopsis.setText(viewData.getOverview());
+        String httpRequestAddress = URL_BASE + SIZE + viewData.getPoster_path();
         Picasso.with(this).load(httpRequestAddress).into(mDetailedItem);
 
     }

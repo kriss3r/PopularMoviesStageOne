@@ -3,6 +3,8 @@ package com.example.user.popularmoviesstageone;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,10 +45,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             mCurrentId = getAdapterPosition();
             Context context = itemView.getContext();
             Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("value",mMoviesList);
-            showPhotoIntent.putExtras(bundle);
-            showPhotoIntent.putExtra("id",mCurrentId);
+            Movie.ResultsBean viewData = mMoviesList.getResults().get(mCurrentId);
+            showPhotoIntent.putExtra("value", viewData);
             context.startActivity(showPhotoIntent);
         }
     }
