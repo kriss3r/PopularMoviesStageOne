@@ -1,9 +1,7 @@
-package com.example.user.popularmoviesstageone.Utilities;
+package com.example.user.popularmoviesstageone.utilities;
 
 import android.net.Uri;
-import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,8 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
-
-import static java.lang.System.in;
 
 /**
  * Created by User on 10.04.2017.
@@ -26,12 +22,13 @@ public class NetworkUtils {
 
     public static final String BASE_URL = "https://api.themoviedb.org/3/";
     public static final String DEFAULT_PHONE_SIZE = "w185";
+    // PASTE API KEY BELOW
     protected static final String API_KEY = "d1f9bfcfade6bf4b6d859f76f24be3dc&";
 
  /*Used to build valid URL according to way which used chosed ( most popular or top rated)*/
 public static URL buildUrl(Boolean userSelection) throws MalformedURLException{
-    String topRated = BASE_URL + "movie/popular?api_key=" + API_KEY;
-    String mostPopular = BASE_URL + "movie/top_rated?api_key=" + API_KEY;
+    String topRated = BASE_URL + "movie/top_rated?api_key=" + API_KEY;
+    String mostPopular = BASE_URL + "movie/popular?api_key=" + API_KEY;
     String selection = "";
     URL mainURL = null;
 
@@ -54,9 +51,14 @@ public static URL buildUrl(Boolean userSelection) throws MalformedURLException{
 public static String getResponseFromHTTPUrl(URL url) throws IOException {
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
+    // set timeouts to make sure that it won't last forever.
+    urlConnection.setConnectTimeout(2000);
+    urlConnection.setReadTimeout(4000);
+
     InputStream is = urlConnection.getInputStream();
     InputStreamReader inputReader = new InputStreamReader(is);
     Scanner sc = new Scanner(is);
+    sc.useDelimiter(System.getProperty("line.separator"));
     String requestResult = "";
     String line;
     StringBuilder builder = new StringBuilder(requestResult);

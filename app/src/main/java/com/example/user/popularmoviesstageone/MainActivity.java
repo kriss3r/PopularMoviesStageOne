@@ -1,70 +1,100 @@
 package com.example.user.popularmoviesstageone;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
+import android.widget.Toast;
 
-import com.example.user.popularmoviesstageone.Utilities.*;
+import com.example.user.popularmoviesstageone.utilities.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
+
     private RecyclerAdapter mRecyclerViewAdapter;
     private GridLayoutManager mGridLayoutManager;
     private static final int SPAN_COUNT = 2;
-    private Movie moviesList;
+    public Movie mMoviesList;
+    private OrientationEventListener mOrientationListener;
     private boolean sortOrder = false; // false for top_rated, true for most_popular
+    @BindView(R.id.rv_images)
+    RecyclerView mRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // FetchClass test.
-        fetchMoviesData(sortOrder);
         setRecyclerView();
+        performConnectionAttempt(sortOrder);
+
     }
 
+    // triggered to obtain data from AsyncTask.
     public void fetchMoviesData(boolean Order){
-        try {
-            moviesList = new FetchMoviesData().execute(Order).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        PostTaskListener<Movie> postTaskListener = new PostTaskListener<Movie>() {
+            @Override
+            public void onPostTask(Movie m) {
+                mMoviesList = m;
+                mRecyclerViewAdapter.swapDataSet(mMoviesList);
+            }
+        };
+// Create the async task and pass it the post task listener.
+        new FetchMoviesData(postTaskListener).execute(Order);
+
+    }
+
+    public void performConnectionAttempt(boolean sortOrder) {
+        if (isConnectedToInternet()) {
+            fetchMoviesData(sortOrder);
+        } else {
+            Toast.makeText(this, "No internet connection, to try again go to settings and choose sort type", Toast.LENGTH_LONG).show();
         }
     }
 
+    // method used to check if there is a network connection, additional permissions required in manifest file(Access.Network.State).
+    public boolean isConnectedToInternet() {
+        ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+
+        }
+        return false;
+    }
+
+    // used to set RecyclerView
     public void setRecyclerView(){
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_images);
+        ButterKnife.bind(this);
         mGridLayoutManager = new GridLayoutManager(this,SPAN_COUNT);
         mGridLayoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerViewAdapter = new RecyclerAdapter(moviesList);
+        mRecyclerViewAdapter = new RecyclerAdapter(mMoviesList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
     }
 
@@ -80,43 +110,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId()==R.id.it_most_popular &&sortOrder!=true){
             sortOrder = true;
-            fetchMoviesData(sortOrder);
+            performConnectionAttempt(sortOrder);
             setRecyclerView();
 
         }else if((item.getItemId()==R.id.it_most_rated &&sortOrder!=false)) {
             sortOrder = false;
-            fetchMoviesData(sortOrder);
+            performConnectionAttempt(sortOrder);
             setRecyclerView();
         }
         return super.onOptionsItemSelected(item);
     }
 
-/*Class used to download data outside of main thread*/
-    public class FetchMoviesData extends AsyncTask<Boolean, String,Movie> {
 
-    @Override
-    protected Movie doInBackground(Boolean... userSelection) {
-        Movie movieList;
-        URL movieRequest = null;
-
-        String responseFromHttpRequest = null;
-
-        try {
-            movieRequest = NetworkUtils.buildUrl(userSelection[0]);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            responseFromHttpRequest = NetworkUtils.getResponseFromHTTPUrl(movieRequest);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-            // create Movie object which contains List of Movies from String HTTP response.
-            Type collectionType = new TypeToken<Movie>(){}.getType();
-            movieList = new Gson().fromJson(responseFromHttpRequest, collectionType);
-        return movieList;
-        }
-    }
 }

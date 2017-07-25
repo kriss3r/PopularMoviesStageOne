@@ -2,10 +2,13 @@ package com.example.user.popularmoviesstageone;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,63 +16,60 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.user.popularmoviesstageone.Utilities.DetailedActivity;
+import com.example.user.popularmoviesstageone.utilities.DetailedActivity;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by User on 05.04.2017.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> implements View.OnClickListener {
-
-    private Movie mMoviesList;
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>  {
+    public int mCurrentId;
+    private static Movie mMoviesList;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private int mCurrentId;
+        @BindView(R.id.movie_item)
+        ImageView mItemImage;
 
-        public TextView mItemTittle,mItemPlotSynopsis;
-        public ImageView mItemImage, mUserRating, mDetailedItem;
 
         public ViewHolder(View v) {
             super(v);
-            mItemTittle = (TextView) v.findViewById(R.id.tv_tittle);
-            mItemPlotSynopsis = (TextView) v.findViewById(R.id.et_plot_synopsis);
-            mItemImage = (ImageView) v.findViewById(R.id.movie_item);
-            mDetailedItem = (ImageView) v.findViewById(R.id.iv_thumbnail);
-            mUserRating = (ImageView) v.findViewById(R.id.iv_user_rating);
-            v.setOnClickListener(this);
+            ButterKnife.bind(this, v);
+            itemView.setOnClickListener(this);
         }
 
 // used to move to correct Activity thorough implicit intent.
         @Override
         public void onClick(View view) {
+            mCurrentId = getAdapterPosition();
             Context context = itemView.getContext();
             Intent showPhotoIntent = new Intent(context, DetailedActivity.class);
+            Movie.ResultsBean viewData = mMoviesList.getResults().get(mCurrentId);
+            showPhotoIntent.putExtra("value", viewData);
             context.startActivity(showPhotoIntent);
         }
     }
 
     public RecyclerAdapter(Movie mMoviesList) {
-        this.mMoviesList= mMoviesList;
+        RecyclerAdapter.mMoviesList = mMoviesList;
     }
     public static final String URL_BASE = "http://image.tmdb.org/t/p/";
     public static final String SIZE = "w154";
+
+    public void swapDataSet(Movie newData) {
+        mMoviesList = newData;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflatedView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.movies_list,parent,false);
-
         // set correct height programmatically
         int height = parent.getMeasuredHeight()/4;
         inflatedView.setMinimumHeight(height);
@@ -78,14 +78,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path();
-        Picasso.with(holder.itemView.getContext()).load(httpRequestAddress).into(holder.mItemImage);
-    }
+        mCurrentId = position;
 
+        String httpRequestAddress = URL_BASE+SIZE+mMoviesList.getResults().get(position).getPoster_path();
+        Picasso
+                .with(holder.itemView.getContext())
+                .load(httpRequestAddress)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(holder.mItemImage);
+}
     @Override
     public int getItemCount() {
-        return this.mMoviesList.getResults().size();
+
+        if (mMoviesList == null || mMoviesList.getResults().isEmpty() == true) {
+            return 0;
+        } else {
+            return mMoviesList.getResults().size();
+        }
     }
-
-
 }
