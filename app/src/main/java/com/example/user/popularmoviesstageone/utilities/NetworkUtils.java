@@ -51,12 +51,18 @@ public static URL buildUrl(Boolean userSelection) throws MalformedURLException{
     "video": false
      */
 
-/*public static URL buildTrailerUrl(Integer movieID) throws MalformedURLException {
-    String trailerUrl = BASE_URL ;
-    return trailerUrl;
-    for each.. ( parse JSON)
-    "key": "BpJYNVhGf1s"
-}*/
+public static URL buildTrailerUrl(Integer movieID) throws MalformedURLException {
+    String trailerUrl = BASE_URL + "movie/" +movieID +"?" +API_KEY + "language=en-US" ;
+    URL mainURL = null;
+    https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
+    try {
+        Uri buildUri = Uri.parse(trailerUrl).buildUpon().build();
+        mainURL = new URL(buildUri.toString());
+    } catch (MalformedURLException e){
+        e.printStackTrace();
+    }
+    return mainURL;
+}
 
 
 /*Method used to receive all http respone content as a String value.*/
