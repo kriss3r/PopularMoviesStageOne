@@ -12,6 +12,16 @@ import com.example.user.popularmoviesstageone.Trailers;
  */
 
 public class FetchTrailersData extends AsyncTask<Boolean, String, Trailers> {
+
+    private PostTaskListenerTrailers<Trailers> PostTaskListener;
+
+    public FetchTrailersData(PostTaskListenerTrailers<Trailers> postTaskListener) {
+        this.PostTaskListener = postTaskListener;
+    }
+
+
+
+
     @Override
     protected Trailers doInBackground(Boolean... booleen) {
         return null;
