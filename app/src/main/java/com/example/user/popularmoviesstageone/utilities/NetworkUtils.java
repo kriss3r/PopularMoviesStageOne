@@ -46,6 +46,19 @@ public static URL buildUrl(Boolean userSelection) throws MalformedURLException{
     return mainURL;
     }
 
+
+  /* Method used to obtain data about available trailers.
+    "video": false
+     */
+
+/*public static URL buildTrailerUrl(Integer movieID) throws MalformedURLException {
+    String trailerUrl = BASE_URL ;
+    return trailerUrl;
+    for each.. ( parse JSON)
+    "key": "BpJYNVhGf1s"
+}*/
+
+
 /*Method used to receive all http respone content as a String value.*/
 
 public static String getResponseFromHTTPUrl(URL url) throws IOException {

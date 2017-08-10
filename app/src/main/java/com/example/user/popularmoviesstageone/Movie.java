@@ -49,6 +49,7 @@ public class Movie implements Parcelable {
         private String release_date;
         private String original_title;
         private double vote_average;
+        private boolean video;
 
         public String getPoster_path() {
             return poster_path;
@@ -86,6 +87,10 @@ public class Movie implements Parcelable {
             return vote_average;
         }
 
+
+        public boolean getVideoAvailability(){return video;}
+
+
         public void setVote_average(double vote_average) {
             this.vote_average = vote_average;
         }
@@ -102,6 +107,7 @@ public class Movie implements Parcelable {
             dest.writeString(this.release_date);
             dest.writeString(this.original_title);
             dest.writeDouble(this.vote_average);
+            dest.writeString(String.valueOf(this.vote_average));
         }
 
         public ResultsBean() {
@@ -113,6 +119,7 @@ public class Movie implements Parcelable {
             this.release_date = in.readString();
             this.original_title = in.readString();
             this.vote_average = in.readDouble();
+            this.video = Boolean.parseBoolean(in.readString());
         }
 
         public static final Creator<ResultsBean> CREATOR = new Creator<ResultsBean>() {

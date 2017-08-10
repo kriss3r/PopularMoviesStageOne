@@ -66,5 +66,19 @@
             android:padding="@dimen/def_padding"
             android:textSize="@dimen/text_size" />
 
+        <TextView
+            android:id="@+id/trailerTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/def_padding"
+            android:textSize="@dimen/text_size"
+            android:text="@string/trailerText"
+            />
+
+        <ListView
+            android:id="@+id/TrailerListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 </ScrollView>
