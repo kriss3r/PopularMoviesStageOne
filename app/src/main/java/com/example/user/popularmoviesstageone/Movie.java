@@ -43,13 +43,22 @@ public class Movie implements Parcelable {
          * video : false
          * vote_average : 6.9
          */
-
+        private Integer id;
         private String poster_path;
         private String overview;
         private String release_date;
         private String original_title;
         private double vote_average;
         private boolean video;
+
+
+        public Integer getId(){
+            return id;
+        }
+
+        public void setId(Integer id){
+            this.id = id;
+        }
 
         public String getPoster_path() {
             return poster_path;
@@ -102,6 +111,7 @@ public class Movie implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.id);
             dest.writeString(this.poster_path);
             dest.writeString(this.overview);
             dest.writeString(this.release_date);
@@ -114,6 +124,7 @@ public class Movie implements Parcelable {
         }
 
         protected ResultsBean(Parcel in) {
+            this.id = in.readInt();
             this.poster_path = in.readString();
             this.overview = in.readString();
             this.release_date = in.readString();

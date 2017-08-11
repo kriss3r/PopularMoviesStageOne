@@ -3,6 +3,7 @@ package com.example.user.popularmoviesstageone;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public class Trailers implements Parcelable {
      */
 
     private int id;
+
     private List<ResultsBean> results;
 
     public Trailers() {
@@ -27,10 +29,6 @@ public class Trailers implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-
-    }
 
     public int getId() {
         return id;
@@ -47,6 +45,19 @@ public class Trailers implements Parcelable {
     public void setResults(List<ResultsBean> results) {
         this.results = results;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.results);
+    }
+
+    protected Trailers(Parcel in) {
+        this.results = new ArrayList<Trailers.ResultsBean>();
+        in.readList(this.results, Trailers.ResultsBean.class.getClassLoader());
+    }
+
+
+
 
     public static class ResultsBean implements Parcelable {
         /**
@@ -146,6 +157,7 @@ public class Trailers implements Parcelable {
             dest.writeString(this.key);
             dest.writeString(this.name);
             dest.writeString(this.type);
+            dest.writeString(this.type);
         }
 
         protected ResultsBean(Parcel in) {
@@ -168,6 +180,9 @@ public class Trailers implements Parcelable {
             }
         };
     }
+
+
+
 
     public static final Creator<Trailers> CREATOR = new Creator<Trailers>() {
         @Override

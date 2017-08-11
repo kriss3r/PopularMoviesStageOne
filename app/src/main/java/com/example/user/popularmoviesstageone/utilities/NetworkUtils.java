@@ -1,6 +1,7 @@
 package com.example.user.popularmoviesstageone.utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,12 +53,13 @@ public static URL buildUrl(Boolean userSelection) throws MalformedURLException{
      */
 
 public static URL buildTrailerUrl(Integer movieID) throws MalformedURLException {
-    String trailerUrl = BASE_URL + "movie/" +movieID +"?" +API_KEY + "language=en-US" ;
+    String trailerUrl = BASE_URL + "movie/" +movieID +"/videos?api_key=" +API_KEY + "&language=en-US" ;
     URL mainURL = null;
     https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
     try {
         Uri buildUri = Uri.parse(trailerUrl).buildUpon().build();
         mainURL = new URL(buildUri.toString());
+        Log.i("mainURL",mainURL.toString());
     } catch (MalformedURLException e){
         e.printStackTrace();
     }

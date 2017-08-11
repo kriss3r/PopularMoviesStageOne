@@ -1,6 +1,7 @@
 package com.example.user.popularmoviesstageone.utilities;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.user.popularmoviesstageone.Movie;
 import com.example.user.popularmoviesstageone.Trailers;
@@ -31,7 +32,7 @@ public class FetchTrailersData extends AsyncTask<Integer, String, Trailers> {
         Trailers trailers;
         URL UrlTrailersRequest = null;
         String responseFromHttpRequest = null;
-
+        Log.e("Tutaj jest","TT");
         try {
             UrlTrailersRequest = NetworkUtils.buildTrailerUrl(integers[0]);
         } catch (MalformedURLException e) {
@@ -43,13 +44,19 @@ public class FetchTrailersData extends AsyncTask<Integer, String, Trailers> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        Log.e("Tutaj jest","TT");
         // create Movie object which contains List of Movies from String HTTP response.
         Type collectionType = new TypeToken<Trailers>() {
         }.getType();
         Gson gson = new Gson();
         trailers = gson.fromJson(responseFromHttpRequest, collectionType);
+        Log.e("Tutaj jest","TT");
         return trailers;
+    }
+
+    protected void onPostExecute(Trailers t) {
+        if (t != null && PostTaskListener != null)
+            PostTaskListener.onPostTask(t);
     }
 
 }
